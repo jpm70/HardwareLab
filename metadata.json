@@ -1,0 +1,6 @@
+{
+  "name": "Simulador de Hardware & Diagnóstico PC/Laptop",
+  "description": "Simulador interactivo de ensamblaje de PC y Laptop, motor de compatibilidad física/térmica/eléctrica y banco de diagnóstico POST, EZ Debug LEDs y Beep Codes con Web Audio API.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
