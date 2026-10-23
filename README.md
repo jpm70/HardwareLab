@@ -1,275 +1,139 @@
-# 🖥️ Simulador de Hardware & Taller de Diagnóstico PC
+<p align="center">
+  <a href="https://www.unfantasmaenelsistema.com"><img src="assets/logo.png" width="110" alt="Un fantasma en el sistema"></a>
+</p>
 
-<div align="center">
+<h1 align="center">HardwareLab</h1>
 
-<a href="https://www.unfantasmaenelsistema.com/" target="_blank" rel="noopener noreferrer">
-  <img src="public/assets/aistudio/icono_81a3db5b.png" alt="Un Fantasma en el Sistema" width="120" height="120" style="max-height: 120px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(56, 189, 248, 0.4));" />
-</a>
+<p align="center">
+  <b>Taller de montaje y diagnóstico de PC en el navegador</b><br>
+  Compatibilidad física real · POST con Q-codes, LEDs y pitidos · Multímetro · Cámara térmica · BIOS UEFI · Averías para resolver
+</p>
 
-### Plataforma Educativa Interactiva de Montaje y Mantenimiento de Equipos Informáticos
-**Desarrollado para Formación Profesional (SMR / ASIR), Laboratorios Universitarios y Técnicos de Soporte**
+<p align="center">
+  <a href="https://unfantasmaenelsistema.github.io/HardwareLab/"><b>▶ Abrir el taller</b></a> ·
+  <a href="#qué-hace">Qué hace</a> ·
+  <a href="#averías">Averías</a> ·
+  <a href="#de-dónde-salen-los-datos">Datos</a> ·
+  <a href="#para-clase">Para clase</a> ·
+  <a href="https://www.unfantasmaenelsistema.com">unfantasmaenelsistema.com</a> ·
+  <a href="LICENSE">MIT</a>
+</p>
 
-[![Autor](https://img.shields.io/badge/Autor-Un%20Fantasma%20en%20el%20Sistema-0284c7?style=for-the-badge&logo=google-chrome&logoColor=white)](https://www.unfantasmaenelsistema.com/)
-[![Web](https://img.shields.io/badge/Web-unfantasmaenelsistema.com-10b981?style=for-the-badge)](https://www.unfantasmaenelsistema.com/)
-[![Licencia](https://img.shields.io/badge/Licencia-MIT-f59e0b?style=for-the-badge)](LICENSE)
-[![Arquitectura](https://img.shields.io/badge/Tecnología-HTML5%20|%20Tailwind%20CSS%20|%20Web%20Audio%20API-6366f1?style=for-the-badge)](https://developer.mozilla.org/es/docs/Web/API/Web_Audio_API)
+<p align="center">
+  <img src="https://img.shields.io/badge/navegador-sin_instalar-10b981?style=flat-square" alt="Sin instalar">
+  <img src="https://img.shields.io/badge/FP-SMR_·_ASIR-0284c7?style=flat-square" alt="SMR y ASIR">
+  <img src="https://img.shields.io/badge/averías-8_casos-f59e0b?style=flat-square" alt="8 averías">
+  <img src="https://img.shields.io/badge/licencia-MIT-blue?style=flat-square" alt="MIT">
+</p>
 
-</div>
+<p align="center">
+  <img src="docs/captura-principal.png" width="900" alt="HardwareLab con un equipo montado que ha completado el POST: display en AA, registro del arranque y revisión del montaje sin problemas">
+</p>
 
----
+Monta una torre o abre un portátil, enciéndelo y mira qué pasa: qué código marca el display, qué LED se queda encendido, cuántos pitidos suenan y qué dice el multímetro. Lo que no encaja en la realidad tampoco encaja aquí, y cada fallo tiene la causa y los síntomas que tendría en un taller de verdad. Funciona sin servidor, no envía nada a ningún sitio y se puede descargar en un único `.html` para usarlo sin conexión.
 
-## 📸 Vistas y Capturas del Sistema
+> [!NOTE]
+> Es un simulador educativo. Las placas tienen display de Q-codes y LEDs de diagnóstico como las de gama media-alta; muchas placas básicas solo traen los LEDs o ni eso. Los códigos y pitidos varían según el fabricante: el manual de cada placa manda.
 
-### 1. Banco de Trabajo y Ensamblaje Físico (Torre ATX & Portátil Laptop)
-Placa base con componentes interactivos, catálogo clasificado por slots, telemetría térmica/eléctrica en vivo y panel de instrumentos.
+## Qué hace
 
-![Banco de Trabajo y Ensamblaje](docs/screenshots/workbench_preview.svg)
+- **Montaje con compatibilidad física**: una CPU AM4 no entra en un zócalo AM5, un módulo DDR4 no entra en una ranura DDR5 (la muesca es distinta) y un SO-DIMM no entra en una ranura de sobremesa. Si lo intentas, te dice por qué.
+- **Memoria por ranuras**: eliges A1, A2, B1 o B2, y los pestillos pueden quedar abiertos (módulo sin asentar). El equipo te recomienda A2 y A2+B2, como los manuales.
+- **Encendido con su secuencia real**: sin el ATX de 24 pines ni siquiera giran los ventiladores; sin el EPS de la CPU giran pero se queda en `00`, con el LED CPU y sin pitidos (sin procesador no hay firmware que pite); sin memoria, `55` y el LED DRAM; sin vídeo, `d6` y el LED VGA; sin disco, el POST acaba bien pero entra en la BIOS.
+- **Pitidos AMI y Award** sintetizados con Web Audio, con las tablas clásicas de cada fabricante (memoria: 3 cortos en AMI, largos repetidos en Award; vídeo: 8 cortos en AMI, 1 largo + 2 cortos en Award).
+- **Modelo térmico**: la temperatura depende del disipador, de la pasta y de la lámina protectora. Sin pasta, la CPU arranca pero limita su frecuencia bajo carga; con la lámina puesta se apaga al exigirle; sin disipador, en segundos.
+- **Modelo eléctrico**: consumo en reposo y a plena carga, con la recomendación de fuente de NVIDIA o AMD para cada gráfica. Una fuente pequeña aguanta el escritorio pero corta por sobrepotencia (OPP) en la **prueba de estrés**.
+- **Multímetro** en el conector ATX: +12 V, +5 V, +3,3 V, +5 VSB (presente aunque el equipo esté apagado), PS_ON# (alto apagado, bajo encendido), PWR_OK, EPS, alimentación de la gráfica y pila CMOS.
+- **Cámara térmica**, **BIOS UEFI** (solo si el equipo ha pasado el POST; datos reales de la CPU y la memoria montadas, perfil EXPO o XMP según la plataforma) y **registro del arranque** paso a paso.
+- **Portátil**: solo se cambian memoria y SSD; tocar la placa con la batería o el cargador conectados la daña; el disipador se aprieta en orden.
+- **Examen de 10 preguntas** con las opciones barajadas y certificado de participación con tu nombre.
 
----
+<p align="center">
+  <img src="docs/captura-instrumentos.png" width="820" alt="Cámara térmica y multímetro midiendo +12 V bajo carga durante la prueba de estrés">
+</p>
 
-### 2. Estación de Diagnóstico: Multímetro Digital DMM, Termografía FLIR y Display POST
-Medición de voltajes reales con rangos de tolerancia ATX, mapa de calor infrarrojo (Ironbow) con detección de hotspots en VRM/CPU/GPU, visualizador de 7 segmentos de 2 dígitos y sintetizador de pitidos BIOS.
+## Averías
 
-![Diagnóstico Multímetro y Termografía](docs/screenshots/diagnostics_dmm_preview.svg)
+<p align="center">
+  <img src="docs/captura-averia.png" width="820" alt="Taller de averías: caso de la memoria sin asentar resuelto tras cerrar los pestillos">
+</p>
 
----
+En el modo **Taller de averías** cada ticket carga un equipo con un fallo. Hay que diagnosticarlo con los síntomas, repararlo y volver a encenderlo: la comprobación usa el arranque real, así que no vale tocar cosas al azar sin encender.
 
-### 3. Simulador UEFI BIOS Aptio Setup Utility & Evaluación SMR / ASIR
-Configuración interactiva de perfiles XMP/EXPO, telemetría de voltajes y examen teórico-práctico de 10 preguntas con emisión de diploma oficial descargable.
+| Caso | Síntoma | Qué se aprende |
+| :-- | :-- | :-- |
+| Pantalla negra tras montar | `55`, LED DRAM, pitidos | Asentar la memoria (pestillos) |
+| El conector olvidado | `00`, LED CPU, sin pitidos | El EPS alimenta la CPU; sin CPU no hay pitidos |
+| Se apaga solo al encender | Ventiladores al máximo y apagado | Pasta y lámina protectora; throttling y THERMTRIP |
+| Gráfica nueva, pantalla negra | `d6`, LED VGA, pitidos de vídeo | Alimentación auxiliar de la gráfica |
+| Siempre entra en la BIOS | POST correcto, sin arranque | Sin disco arrancable |
+| Se apaga al empezar a jugar | Bien en reposo, apagón bajo carga | Dimensionar la fuente (OPP) |
+| Pierde la hora y la configuración | «CMOS checksum bad», pide F1 | Medir y cambiar la pila CR2032 |
+| Ampliar la memoria de un portátil | — | Protocolo: batería y cargador fuera |
 
-![BIOS UEFI y Examen SMR](docs/screenshots/uefi_bios_preview.svg)
+## De dónde salen los datos
 
----
+- **CPU**: TDP y potencia máxima de los fabricantes (Ryzen 7 7800X3D: 120 W / PPT 162 W, Tjmax 89 °C; Core i9-14900K: 125 W / PL2 253 W; Core i5-13400: 65 / 148 W; Ryzen 5 5600X: 65 / 88 W, sin gráficos integrados).
+- **Gráficas**: consumo y fuente recomendada por NVIDIA y AMD (RTX 4080: 320 W y 750 W, conector 16 pines 12VHPWR / 12V-2x6; RX 7800 XT: 263 W y 700 W, 2 × 8 pines).
+- **Tensiones**: tolerancia de ±5 % de ATX12V 2.x (+12 V entre 11,40 y 12,60 V). ATX 3.x permite bajar +12 V hasta 11,2 V (−7 %) en casi todos los conectores. PWR_OK llega entre 100 y 500 ms después de estabilizar las tensiones.
+- **Q-codes**: tabla de checkpoints de AMI Aptio que usan ASUS y otros (`55` memoria no instalada, `d6` sin salida de vídeo, `A2` dispositivos de arranque, `AA` control al sistema/BIOS).
+- **Pitidos**: tablas clásicas de AMIBIOS y Award (memoria y vídeo).
 
-## 🎯 ¿Qué es esta aplicación?
+El modelo térmico y eléctrico es una aproximación didáctica (temperatura proporcional a la potencia entre la capacidad del disipador y la calidad del contacto), no una simulación física. Sirve para que causa y síntoma vayan en la misma dirección que en la realidad.
 
-Es un **laboratorio virtual integral de hardware** diseñado tanto para estudiantes de informática (Ciclos Formativos de Grado Medio en **Sistemas Microinformáticos y Redes - SMR** y Grado Superior en **Administración de Sistemas Informáticos en Red - ASIR**) como para entusiastas y técnicos de servicio de asistencia.
+## Para clase
 
-La aplicación permite practicar todo el ciclo de vida de un equipo informático:
-1. **Ensamblaje físico guiado y sin riesgos.**
-2. **Validación algorítmica de compatibilidad eléctrica, térmica y de formatos.**
-3. **Puesta en marcha con secuencia POST real y sonido de la BIOS mediante Web Audio API.**
-4. **Localización de averías con herramientas profesionales (DMM, cámara térmica, códigos POST y LEDs de estado).**
-5. **Configuración del firmware UEFI/BIOS.**
-6. **Evaluación de conocimientos con diploma acreditativo personalizable.**
+- **Sin instalar nada**: abre el [enlace](https://unfantasmaenelsistema.github.io/HardwareLab/) o pulsa el botón de descarga y reparte el `.html`: funciona sin conexión.
+- **Avería sorpresa** asigna un caso al azar: útil para que cada alumno diagnostique uno distinto y explique los síntomas antes de repararlo.
+- El **registro del POST** se puede copiar para entregar el diagnóstico.
 
----
+<p align="center">
+  <img src="docs/captura-portatil.png" width="760" alt="Portátil: la placa queda dañada al instalar memoria con la batería conectada">
+</p>
 
-## ✨ Características Principales
+## Usarlo en local
 
-### 🛠️ 1. Simulador de Montaje Interactivo (Dual-Device)
-- **Torre ATX de Chasis Abierto:**
-  - Socket CPU con pestaña de retención y triángulo dorado de alineación.
-  - Aplicación de compuesto térmico y montaje de Cooler de aire o Refrigeración Líquida (AIO).
-  - Configuración de memoria RAM en Dual Channel (Slots DDR 2 y 4 preferentes).
-  - Almacenamiento SSD M.2 NVMe PCIe 4.0/5.0 con tornillo y disipador.
-  - Tarjeta gráfica dedicada (GPU) en ranura PCIe 5.0 x16 con cierre mecánico.
-  - Fuente de alimentación modular con conexionado individual de cableado ATX 24 pines, EPS 8 pines (+12V CPU) y PCIe 6+2 pines.
-  - Conexión del Front Panel (Power SW, Reset SW, Power LED, HDD LED).
-- **Portátil / Laptop (Chasis Inferior Abierto):**
-  - **Protocolo de seguridad obligatorio:** Desconexión previa de la batería interna antes de cualquier manipulación de componentes.
-  - Módulos SO-DIMM RAM con inserción en ángulo de 30° y cierre por presión.
-  - Tarjeta Wi-Fi / Bluetooth M.2 con conexión de cableado coaxial de antena (Main y Auxiliar).
-  - Módulo térmico de cobre con apriete de tornillos numerados en cruz (1 ➔ 2 ➔ 3 ➔ 4) para reparto uniforme de presión sobre el die de silicio.
-
----
-
-### ⚡ 2. Motor de Compatibilidad en Tiempo Real
-El sistema ejecuta un análisis cruzado instantáneo de la configuración montada y avisa ante anomalías:
-* **Incompatibilidad de Socket:** Detección de combinaciones erróneas (ej. Intel LGA1700 montado sobre AMD AM5 / AM4).
-* **Generación de Memoria:** Validación de slots DDR4 frente a DDR5 y módulos DIMM vs. SO-DIMM.
-* **Sobrecarga de Fuente (Power Budgeting):** Sumatorio de TDP de CPU, GPU, chipset y periféricos con margen de seguridad del 20%. Alerta si la fuente no entrega los vatios requeridos.
-* **Cuello de Botella Térmico:** Detección de procesadores de alto TDP (>120W) sin compuesto térmico o con disipadores pasivos insuficientes.
-* **Factor de Forma:** Verificación de dimensiones de placa base contra bahías del chasis.
-
----
-
-### 🔊 3. Secuencia POST, Display Hexadecimal y Sintetizador de Beep Codes
-- **Display Q-Code de 2 Dígitos Hexadecimales (7 Segmentos):**
-  - Muestra la progresión de estados POST (`15` Pre-memoria, `55` Error RAM, `d6` Error GPU, `A2` IDE/SATA Detect, `AA` Éxito total y cesión al SO).
-- **EZ Debug LEDs (4 Fases SMD):**
-  - LEDs de diagnóstico rápido en placa: `CPU`, `DRAM`, `VGA` y `BOOT`.
-- **Sintetizador de Pitidos BIOS con Web Audio API Nativo:**
-  - Generación de audio analítico en tiempo real (ondas cuadradas con armónicos a 880 Hz - 1000 Hz) **sin archivos de audio externos**.
-  - Soporte de 3 tablas de BIOS históricas y actuales: **AMI BIOS**, **Award BIOS** y **Phoenix BIOS**.
-  - Emulación de pitido único de OK, bucle infinito de memoria, código 1 largo + 2 cortos de GPU y sirena de alta/baja frecuencia por sobrecalentamiento.
-
----
-
-### 🧪 4. Módulo de Diagnóstico Avanzado & Instrumentación de Laboratorio
-- **Multímetro Digital DMM (Emulación Fluke True RMS):**
-  - Sonda interactiva sobre los 9 pines críticos del conector ATX de 24 pines (+12V1, +12V2, +5V, +3.3V, +5VSB Standby, PWR_OK / PG, PS_ON#, -12V y GND).
-  - Comprobación automática contra la **norma ATX 3.0** (Tolerancias ±5% en líneas principales y ±10% en carril negativo).
-- **Cámara Termográfica FLIR (Paleta Ironbow):**
-  - Mapa térmico interactivo que refleja la carga del procesador y los mosfets de la etapa de potencia VRM.
-  - Detección visual de gradientes térmicos: Azul profundo (25°C) ➔ Magenta ➔ Naranja ➔ Blanco incandescente (Hotspot a 85°C+).
-- **Kit de Taller y Mantenimiento:**
-  - Pulsera antiestática ESD conectada a tierra para evitar descargas electrostáticas destructivas.
-  - Bote de Alcohol Isopropílico (IPA 99.9%) con paño de microfibra para limpieza de IHS.
-  - Jeringa dosificadora de pasta térmica de alto rendimiento (Kryonaut ~12.5 W/mK).
-
----
-
-### 💻 5. Simulador UEFI BIOS Aptio Setup Utility
-- Emulación fiel en pantalla completa del entorno de firmware con control de teclado (**← → ↑ ↓, Enter, F10, ESC**):
-  - **Pestaña Main:** Datos del procesador, frecuencia, cantidad de memoria y versión de BIOS.
-  - **Pestaña Advanced:** Activación de perfiles de memoria de alto rendimiento **Intel XMP / AMD EXPO (DDR5-6000)** y modos PCIe Gen 5.0.
-  - **Pestaña Thermal & Hardware Monitor:** Monitorización en tiempo real de voltajes VCORE, velocidad de ventilador por tacómetro PWM y temperatura de silicio.
-  - **Pestaña Boot Priority:** Selección de dispositivo de arranque (NVMe SSD vs. Memoria USB UEFI).
-
----
-
-### 🩺 6. Modo Taller de Averías (Break & Fix / Retos Técnicos)
-Generador de incidentes de soporte técnico real con piezas averiadas ocultas:
-1. **Caso 1: "La pantalla negra del novato":** Código POST `55`, 3 pitidos cortos en AMI BIOS; falso contacto o módulo DDR no asentado en el banco correspondiente.
-2. **Caso 2: "El apagón por sobretemperatura":** El equipo enciende pero se apaga a los 15 segundos con thermal throttling; ausencia de pasta térmica o plástico protector de la base del disipador no retirado.
-3. **Caso 3: "Reinicios bajo carga pesada":** Fuente genérica defectuosa en el rail de +12V que sufre caídas de tensión al superar los 300W de consumo de GPU.
-4. **Caso 4: "El bucle infinito de BIOS / No Boot":** Disco duro no inicializado o fallo del bus SATA/NVMe; código POST `A2`.
-
----
-
-### 🎓 7. Evaluación de Conocimientos y Certificación SMR / ASIR
-- Batería de 10 preguntas tipo test sobre normas ATX, arquitectura x86, refrigeración y procedimientos de seguridad en taller.
-- Corrección inmediata con justificación pedagógica en cada respuesta.
-- Generación de **Diploma Oficial de Técnico de Hardware**, sellado por el portal *Un Fantasma en el Sistema*, con nombre del alumno/a, fecha y calificación, listo para imprimir o guardar en PDF.
-
----
-
-## 📋 Tablas de Referencia Rápida para Técnicos
-
-### 1. Códigos POST Hexadecimales Comunes (Display de 2 Dígitos)
-
-| Código Hex | Significado Técnico | Procedimiento de Resolución |
-| :---: | :--- | :--- |
-| **`00` / `FF`** | Error grave de CPU o microcódigo corrupto | Verificar pines del socket, alimentación EPS de 8 pines o actualizar BIOS con flashback. |
-| **`15` - `19`** | Inicialización del controlador de memoria | Proceso normal de entrenamiento de memoria (Memory Training). Esperar unos segundos. |
-| **`53` / `55`** | Memoria RAM no detectada o incompatible | Reasentar módulos en slots A2/B2 (2 y 4), limpiar contactos con IPA o probar módulo a módulo. |
-| **`b2` / `d6`** | Fallo de GPU / Sin salida de vídeo | Comprobar cable PCIe 6+2 pines de la gráfica, asentar ranura PCIe x16 o revisar cable DisplayPort/HDMI. |
-| **`99` / `A2`** | Dispositivos de arranque no encontrados | Verificar alimentación SATA, conexión de M.2 NVMe o configuración de partición GPT/UEFI en BIOS. |
-| **`AA`** | **POST Exitoso** | El sistema ha cedido el control de arranque al cargador del sistema operativo (OS Boot Loader). |
-
----
-
-### 2. Patrones Acústicos de la BIOS (AMI BIOS Beep Codes)
-
-| Patrón Acústico | Fallo Diagnosticado | Acción Correctiva |
-| :--- | :--- | :--- |
-| **1 pitido corto** | **POST OK** | Equipo listo. Operación normal. |
-| **1 largo continuo** | Fallo de refresco o suministro DRAM | Reinsertar RAM o comprobar carril +3.3V/+1.2V. |
-| **3 pitidos cortos** | Error en los primeros 64KB de RAM | Módulo de memoria defectuoso o slot dañado. |
-| **1 largo + 2 cortos** | Fallo en subsistema de vídeo (GPU) | Comprobar GPU dedicada, alimentación PCIe o monitor. |
-| **1 largo + 3 cortos** | Error de memoria convencional / DAC de vídeo | Tarjeta gráfica incompatible o VRAM defectuosa. |
-| **Sirena aguda/grave** | Sobrecalentamiento crítico de CPU | Apagado inmediato. Inspeccionar anclaje de cooler y compuesto térmico. |
-
----
-
-### 3. Tolerancias Eléctricas Oficiales ATX (ATX12V 3.0 / EPS12V)
-
-| Carril (Rail) | Tensión Nominal | Rango Mínimo Permitido | Rango Máximo Permitido | Tolerancia |
-| :--- | :---: | :---: | :---: | :---: |
-| **+12V1 / +12V2** | +12.00 V | **+11.40 V** | **+12.60 V** | **±5%** |
-| **+5.0V** | +5.00 V | **+4.75 V** | **+5.25 V** | **±5%** |
-| **+3.3V** | +3.30 V | **+3.14 V** | **+3.47 V** | **±5%** |
-| **+5VSB (Standby)**| +5.00 V | **+4.75 V** | **+5.25 V** | **±5%** |
-| **-12.0V** | -12.00 V | **-10.80 V** | **-13.20 V** | **±10%** |
-| **PWR_OK (Power Good)** | +5.00 V | Señal TTL activa (> +2.4V) entre 100ms y 500ms tras encendido | |
-
----
-
-## 🚀 Puesta en Marcha e Instalación
-
-La aplicación está diseñada para tener **cero barreras de entrada**. Puedes ejecutarla de forma autónoma sin instalar herramientas de compilación, o bien servirla en un entorno de desarrollo web moderno.
-
-### Opción A: Ejecución Directa (Sin dependencias ni Node.js)
-El archivo `index.html` es completamente autosuficiente:
-1. Clona o descarga este repositorio:
-   ```bash
-   git clone https://github.com/tu-usuario/simulador-hardware-pc.git
-   ```
-2. Abre directamente el archivo `index.html` con doble clic en tu navegador web preferido (Google Chrome, Mozilla Firefox, Microsoft Edge, Safari u Opera).
-3. ¡Listo para usar en el aula o en tu taller!
-
----
-
-### Opción B: Entorno de Desarrollo con Node.js / Vite
-Si deseas modificar el código fuente con soporte de TypeScript y servidor de desarrollo local:
-
-1. Clona el repositorio e instala los paquetes:
-   ```bash
-   git clone https://github.com/tu-usuario/simulador-hardware-pc.git
-   cd simulador-hardware-pc
-   npm install
-   ```
-
-2. Arranca el servidor de desarrollo local:
-   ```bash
-   npm run dev
-   ```
-   Abre tu navegador en `http://localhost:3000`.
-
-3. Compila la versión de producción optimizada:
-   ```bash
-   npm run build
-   ```
-   Los archivos estáticos listos para producción se generarán en la carpeta `dist/`.
-
----
-
-### Opción C: Despliegue en GitHub Pages (1 Clic)
-1. Ve a los **Settings** de tu repositorio en GitHub.
-2. Accede a la pestaña **Pages** en el menú izquierdo.
-3. En **Source**, selecciona `Deploy from a branch` ➔ Rama `main` ➔ Carpeta `/ (root)`.
-4. Guarda los cambios. Tu simulador estará online en segundos en `https://tu-usuario.github.io/simulador-hardware-pc/`.
-
----
-
-## 📁 Estructura del Proyecto
-
-```text
-├── index.html                   # Aplicación principal completa (Single-File SPA con UI y Motores)
-├── metadata.json                # Metadatos del proyecto y descriptores de configuración
-├── package.json                 # Dependencias y scripts de construcción (Vite / Tailwind / TS)
-├── tsconfig.json                # Configuración de TypeScript
-├── vite.config.ts               # Configuración del bundler Vite
-├── LICENSE                      # Licencia de código abierto MIT
-├── README.md                    # Documentación técnica completa (esta guía)
-├── public/
-│   └── assets/
-│       └── aistudio/
-│           └── icono_81a3db5b.png # Logotipo oficial de Un Fantasma en el Sistema
-└── docs/
-    └── screenshots/             # Diagramas vectoriales y capturas de pantalla de la aplicación
-        ├── workbench_preview.svg
-        ├── diagnostics_dmm_preview.svg
-        └── uefi_bios_preview.svg
+```bash
+git clone https://github.com/unfantasmaenelsistema/HardwareLab.git
 ```
 
----
+Abre `index.html` con el navegador. No hace falta compilar nada.
 
-## 🛡️ Principios Pedagógicos y Reglas de Taller Aplicadas
+### Desarrollo
 
-1. **La regla de oro del servicio técnico de portátiles:** Antes de tocar la placa, desconectar la batería para evitar cortocircuitos causados por caídas accidentales de tornillos o contactos de destornilladores.
-2. **El apriete cruzado (Star Pattern / X-Pattern):** Los tornillos del disipador o del bloque de la CPU deben apretarse de forma equilibrada (siguiendo el orden 1-2-3-4) para evitar la fractura del sustrato de silicio y asegurar un reparto uniforme de la pasta térmica.
-3. **El canal dual (Dual Channel):** El uso de dos canales independientes dobla el ancho de banda del bus de memoria (de 64 a 128 bits). En placas de 4 bancos, deben emplearse los slots 2 y 4 (A2 y B2) para minimizar las reflexiones de señal en los extremos de las pistas.
-4. **La protección contra descargas electrostáticas (ESD):** La electricidad estática acumulada en el cuerpo humano (miles de voltios imperceptibles) puede perforar el óxido de puerta de los transistores MOSFET microscópicos sin dejar rastro visible exterior.
+```text
+index.html       interfaz
+js/core.js       núcleo sin DOM: catálogo, compatibilidad, POST, modelo térmico y eléctrico, multímetro, averías, examen
+js/app.js        pantalla: dibujo de la placa y el portátil, audio, instrumentos, BIOS
+css/src.css      estilos fuente (Tailwind 3)  →  css/app.css compilado
+tests/           pruebas del núcleo (node --test)
+```
 
----
+```bash
+npm ci          # solo para recompilar el CSS
+npm test        # pruebas del núcleo
+npm run css     # recompila css/app.css
+```
 
-## 🤝 Créditos y Agradecimientos
+## Cambios
 
-Este simulador ha sido concebido y desarrollado con dedicación para la comunidad educativa y técnica por:
+### 2.0 (2026-10-23)
 
-<div align="center">
+Revisión completa de la primera versión, generada con Google AI Studio:
 
-### **Un Fantasma en el Sistema**
-🌐 Sitio Web Oficial: [https://www.unfantasmaenelsistema.com/](https://www.unfantasmaenelsistema.com/)
+- **Datos técnicos corregidos**: los pitidos de vídeo de AMI eran los de Award; la tabla de Phoenix no existía; la tolerancia «ATX 3.0 ±5 %» es la de ATX12V 2.x; PS_ON# aparecía a 0 V con el equipo apagado (es al revés) y PWR_OK se «medía» en milisegundos con el multímetro; la RTX 4080 no usa conectores 6+2; sin CPU sonaba una sirena (sin procesador no suena nada).
+- **Lógica del montaje**: antes se podían «montar» CPU de otro zócalo, memoria DDR4 en placas DDR5 o un DIMM en el portátil, y solo salía un aviso. «Quitar» memoria siempre vaciaba la primera ranura, aunque el módulo estuviera en otra. Una fuente de 450 W con una RTX 4080 o un disipador pasivo con un i9 arrancaban sin ningún problema.
+- **Averías**: la del portátil solo se resolvía con «Desmontar todo» (la placa dañada no se podía reparar); la del EPS y la de la RAM se daban por resueltas sin arrancar; ahora hay ocho, se comprueban con el arranque real y una de ellas exige pasar la prueba de estrés.
+- **Examen**: 9 de las 10 respuestas correctas eran la opción B. Ahora se barajan, las explicaciones están revisadas y el certificado lleva tu nombre (antes prometía nombre y no lo pedía) y deja claro que no tiene validez oficial.
+- **BIOS**: mostraba siempre el Ryzen 7800X3D, AGESA y DDR5-6000 aunque montaras un Intel con DDR4, y se podía abrir con el equipo apagado.
+- **Técnico**: fuera la CDN de Tailwind y Google Fonts (el «funciona sin conexión» no era cierto), el logo roto en GitHub Pages, los `onclick` en línea (ahora hay CSP), un icono SVG roto y el andamiaje de AI Studio (Gemini, Vite, Express) que no se usaba. El HTML único de 225 KB se separa en interfaz, núcleo con pruebas y estilos.
 
-*Divulgación tecnológica, arquitectura de sistemas, ciberseguridad y docencia informática.*
+### 1.0
 
-</div>
+Versión inicial generada con Google AI Studio.
 
----
+## Créditos y licencia
 
-## 📄 Licencia
+Hecho por **[Un Fantasma en el Sistema](https://www.unfantasmaenelsistema.com/)**. Código abierto bajo licencia [MIT](LICENSE).
 
-Este proyecto se distribuye bajo la licencia **MIT**. Eres libre de utilizarlo, modificarlo, integrarlo en aulas, colegios, institutos y centros de formación profesional siempre que se mantengan los créditos originales de autoría. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+Los nombres de procesadores y tarjetas gráficas son marcas de sus fabricantes y se usan solo para describir sus características.
